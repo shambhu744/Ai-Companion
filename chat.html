@@ -60,4 +60,59 @@
             padding: 12px;
             background: #007bff;
             border: none;
-            border-radius: 
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <h2>Chat with your AI Companion ❤️</h2>
+
+        <div class="messages" id="messages"></div>
+
+        <input type="text" id="userInput" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById("userInput");
+            const messages = document.getElementById("messages");
+
+            if (!input.value.trim()) return;
+
+            // Show user message
+            const userMsg = document.createElement("div");
+            userMsg.className = "msg user";
+            userMsg.innerText = input.value;
+            messages.appendChild(userMsg);
+
+            // Send to backend
+            const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: input.value })
+            });
+
+            const data = await response.json();
+
+            // Show AI message
+            const aiMsg = document.createElement("div");
+            aiMsg.className = "msg ai";
+            aiMsg.innerText = data.reply;
+            messages.appendChild(aiMsg);
+
+            input.value = "";
+            messages.scrollTop = messages.scrollHeight;
+        }
+    </script>
+
+</body>
+</html>
