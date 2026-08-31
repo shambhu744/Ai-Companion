@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/chat/route.mjs": {
+      "runtime": "nodejs20.x"
+    }
+  }
+}
