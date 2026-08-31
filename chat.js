@@ -1,30 +1,38 @@
-import OpenAI from "openai";
+document.getElementById("sendBtn").addEventListener("click", sendMessage);
 
-export default async function handler(req, res) {
-    if (req.method !== "POST") {
-        return res.status(405).json({ error: "Method not allowed" });
-    }
+async function sendMessage() {
+    const input = document.getElementById("userInput");
+    const message = input.value.trim();
 
-    const client = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY
-    });
+    if (!message) return;
+
+    addMessage("You", message);
+    input.value = "";
 
     try {
-        const userMessage = req.body.message;
-
-        const completion = await client.chat.completions.create({
-            model: "gpt-4o-mini",
-            messages: [
-                { role: "system", content: "You are a romantic, friendly AI girlfriend." },
-                { role: "user", content: userMessage }
-            ]
+        const response = await fetch("/api/chat/route", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message })
         });
 
-        const reply = completion.choices[0].message.content;
+        const data = await response.json();
 
-        res.status(200).json({ reply });
+        if (data.reply) {
+            addMessage("AI Girlfriend", data.reply);
+        } else {
+            addMessage("AI Girlfriend", "Sorry, something went wrong.");
+        }
     } catch (error) {
-        console.error("API Error:", error);
-        res.status(500).json({ error: "Something went wrong." });
+        addMessage("AI Girlfriend", "Error: " + error.message);
     }
+}
+
+function addMessage(sender, text) {
+    const chatBox = document.getElementById("chatBox");
+    const msg = document.createElement("p");
+    msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
+    chatBox.appendChild(msg);
 }
