@@ -20,16 +20,11 @@ export async function POST(req) {
         return new Response(JSON.stringify({
             reply: completion.choices[0].message.content
         }), {
-            status: 200,
             headers: { "Content-Type": "application/json" }
         });
 
-    } catch (err) {
-        console.error("API Error:", err);
-        return new Response(JSON.stringify({
-            error: "Server error",
-            details: err.message
-        }), {
+    } catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
             status: 500,
             headers: { "Content-Type": "application/json" }
         });
