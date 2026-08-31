@@ -11,10 +11,7 @@ export async function POST(req) {
 
         const completion = await client.responses.create({
             model: "gpt-4o-mini",
-            input: [
-                { role: "system", content: "You are a romantic, friendly AI girlfriend." },
-                { role: "user", content: userMessage }
-            ]
+            input: `You are a romantic, friendly AI girlfriend.\nUser: ${userMessage}`
         });
 
         return new Response(JSON.stringify({
