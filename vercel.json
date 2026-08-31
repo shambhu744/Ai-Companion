@@ -3,5 +3,10 @@
     "api/chat/route.mjs": {
       "runtime": "nodejs20.x"
     }
+  },
+  "build": {
+    "env": {
+      "VERCEL_FORCE_RUNTIME": "node"
+    }
   }
 }
