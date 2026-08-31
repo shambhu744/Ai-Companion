@@ -1,12 +1,30 @@
-async function sendMessage(message) {
-    const response = await fetch("/api/chat", {
+const chatBox = document.getElementById("chat-box");
+const inputBox = document.getElementById("input-box");
+const sendBtn = document.getElementById("send-btn");
+
+async function sendMessage() {
+    const message = inputBox.value.trim();
+    if (!message) return;
+
+    // Show user message
+    chatBox.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+    inputBox.value = "";
+
+    // Send to backend
+    const response = await fetch("https://ai-companion-shambhu4.vercel.app/api/chat", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message })
     });
 
     const data = await response.json();
-    console.log(data.reply);
+
+    // Show AI reply
+    chatBox.innerHTML += `<p><strong>GF:</strong> ${data.reply}</p>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+sendBtn.addEventListener("click", sendMessage);
+inputBox.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+});
