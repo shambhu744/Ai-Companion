@@ -9,16 +9,16 @@ export async function POST(req) {
         const body = await req.json();
         const userMessage = body.message;
 
-        const completion = await client.chat.completions.create({
+        const completion = await client.responses.create({
             model: "gpt-4o-mini",
-            messages: [
+            input: [
                 { role: "system", content: "You are a romantic, friendly AI girlfriend." },
                 { role: "user", content: userMessage }
             ]
         });
 
         return new Response(JSON.stringify({
-            reply: completion.choices[0].message.content
+            reply: completion.output_text
         }), {
             headers: { "Content-Type": "application/json" }
         });
